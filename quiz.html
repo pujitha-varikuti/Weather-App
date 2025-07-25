@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Online Quiz Maker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background: #0f2027;
+      color: white;
+      padding: 20px 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    input[type="text"], select {
+      padding: 10px;
+      width: 90%;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .question-block {
+      background: white;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 600px) {
+      input, .btn {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Online Quiz Maker</h1>
+</header>
+
+<section id="home">
+  <h2>Welcome!</h2>
+  <button class="btn" onclick="showSection('createQuiz')">Create a Quiz</button>
+  <button class="btn" onclick="showSection('takeQuiz')">Take a Quiz</button>
+</section>
+
+<section id="createQuiz" style="display:none;">
+  <h2>Create Your Quiz</h2>
+  <div id="quizForm">
+    <!-- Questions will be added here -->
+  </div>
+  <button class="btn" onclick="addQuestion()">Add Question</button>
+  <button class="btn" onclick="saveQuiz()">Save Quiz</button>
+</section>
+
+<section id="takeQuiz" style="display:none;">
+  <h2>Take the Quiz</h2>
+  <form id="quizTakeForm"></form>
+</section>
+
+<section id="result" style="display:none;">
+  <h2>Results</h2>
+  <p id="scoreText"></p>
+  <button class="btn" onclick="restart()">Go to Home</button>
+</section>
+
+<script>
+  let questions = [];
+
+  function showSection(sectionId) {
+    document.querySelectorAll("section").forEach(s => s.style.display = "none");
+    document.getElementById(sectionId).style.display = "block";
+  }
+
+  function addQuestion() {
+    const index = questions.length;
+    const block = document.createElement("div");
+    block.className = "question-block";
+    block.innerHTML = `
+      <input type="text" placeholder="Question" id="q${index}">
+      <input type="text" placeholder="Option A" id="q${index}a">
+      <input type="text" placeholder="Option B" id="q${index}b">
+      <input type="text" placeholder="Option C" id="q${index}c">
+      <input type="text" placeholder="Option D" id="q${index}d">
+      <select id="q${index}correct">
+        <option value="">Correct Answer</option>
+        <option value="a">Option A</option>
+        <option value="b">Option B</option>
+        <option value="c">Option C</option>
+        <option value="d">Option D</option>
+      </select>
+    `;
+    document.getElementById("quizForm").appendChild(block);
+    questions.push(index);
+  }
+
+  function saveQuiz() {
+    const quizData = questions.map(i => {
+      return {
+        question: document.getElementById(`q${i}`).value,
+        options: {
+          a: document.getElementById(`q${i}a`).value,
+          b: document.getElementById(`q${i}b`).value,
+          c: document.getElementById(`q${i}c`).value,
+          d: document.getElementById(`q${i}d`).value,
+        },
+        correct: document.getElementById(`q${i}correct`).value
+      };
+    });
+
+    localStorage.setItem("savedQuiz", JSON.stringify(quizData));
+    alert("Quiz Saved!");
+    restart();
+  }
+
+  function loadQuiz() {
+    const data = JSON.parse(localStorage.getItem("savedQuiz") || "[]");
+    const form = document.getElementById("quizTakeForm");
+    form.innerHTML = "";
+    data.forEach((q, idx) => {
+      const div = document.createElement("div");
+      div.className = "question-block";
+      div.innerHTML = `
+        <p><strong>${idx + 1}. ${q.question}</strong></p>
+        <label><input type="radio" name="q${idx}" value="a"> ${q.options.a}</label><br>
+        <label><input type="radio" name="q${idx}" value="b"> ${q.options.b}</label><br>
+        <label><input type="radio" name="q${idx}" value="c"> ${q.options.c}</label><br>
+        <label><input type="radio" name="q${idx}" value="d"> ${q.options.d}</label><br>
+      `;
+      form.appendChild(div);
+    });
+
+    const submit = document.createElement("button");
+    submit.className = "btn";
+    submit.type = "submit";
+    submit.innerText = "Submit Quiz";
+    form.appendChild(submit);
+
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      let score = 0;
+      data.forEach((q, idx) => {
+        const userAnswer = document.querySelector(`input[name="q${idx}"]:checked`);
+        if (userAnswer && userAnswer.value === q.correct) {
+          score++;
+        }
+      });
+      document.getElementById("scoreText").innerText = `Your Score: ${score}/${data.length}`;
+      showSection("result");
+    };
+  }
+
+  function restart() {
+    location.reload();
+  }
+
+  // Load quiz if user chooses to take it
+  document.querySelector("[onclick=\"showSection('takeQuiz')\"]").addEventListener("click", loadQuiz);
+</script>
+
+</body>
+</html>

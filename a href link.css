@@ -1,0 +1,26 @@
+*{  
+    border-radius: 100px;
+    background-color: blueviolet;
+    text-align: center;
+}
+.profile-container
+{   
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items:center;
+    color: azure;
+}
+.bio{
+    text-align: center;
+    content:blue;
+}
+.center{
+    color: aliceblue;
+    text-align: center;
+}
+ul{
+    list-style: decimal;
+    list-style-position: inside;
+    padding: 0%;
+}

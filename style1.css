@@ -1,0 +1,83 @@
+body {
+  background: #111;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  margin: 0;
+  padding-top: 60px;
+}
+
+.container {
+  width: 350px;
+  background: #1e1e1e;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(162, 0, 255, 0.336);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0ff;
+}
+
+.input-section {
+  display: flex;
+  gap:10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  background: #0ff;
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #00f2ff;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background: #222;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.completed {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}

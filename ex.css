@@ -1,0 +1,38 @@
+/* .background-image
+{
+     background-image:url("https://images.squarespace-cdn.com/content/v1/58590703e4fcb586c80e4914/1609175129324-BBA0X8N5FIBLF9RVMW63/AVBlog_16.jpg");  
+   
+    background-image: "https://images.squarespace-cdn.com/content/v1/58590703e4fcb586c80e4914/1609175129324-BBA0X8N5FIBLF9RVMW63/AVBlog_16.jpg"; 
+    width:"1000vw";
+    height: "1000vh";
+   background-size:cover; 
+} */
+ .card
+ {
+   background-image:url('https://images.squarespace-cdn.com/content/v1/58590703e4fcb586c80e4914/1609175129324-BBA0X8N5FIBLF9RVMW63/AVBlog_16.jpg'); 
+   text-align: center;
+   width: 1500px;
+   height: 1000px;
+   background-position: center;
+   background-repeat: no-repeat;
+   display: flex; /* Enables flexbox for child elements */
+   flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centers horizontally */
+ 
+ }
+ .background
+ {
+   background-color: black;
+   border-radius: 30px;
+   width: 200px;
+   height: 200px;
+   
+  
+ }
+ .main-heading{
+   color: blue;
+ }
+ .paragraph{
+   color:blueviolet;
+ }

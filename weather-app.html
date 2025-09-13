@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: background 1.5s ease;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            flex: 1;
+            margin-right: 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-box button {
+            border: none;
+            outline: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .weather-icon {
+            width: 150px;
+            margin-top: 10px;
+        }
+
+        .temperature {
+            font-size: 70px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .city {
+            font-size: 40px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-top: 40px;
+        }
+
+        .col {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .col img {
+            width: 40px;
+            margin-right: 15px;
+        }
+
+        .humidity, .wind {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .weather, .error {
+            display: none;
+        }
+
+        .error {
+            text-align: left;
+            margin-left: 10px;
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ff6b6b;
+        }
+
+        .forecast {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .forecast-item {
+            flex: 0 0 auto;
+            width: 70px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+            margin: 0 5px;
+        }
+
+        .forecast-day {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .forecast-temp {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .temperature {
+                font-size: 60px;
+            }
+            
+            .city {
+                font-size: 30px;
+            }
+            
+            .details {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="error">
+            <p>Invalid city name. Please try again.</p>
+        </div>
+
+        <div class="weather">
+            <img src="" class="weather-icon" alt="Weather Icon">
+            <h1 class="temperature">22°C</h1>
+            <h2 class="city">New York</h2>
+
+            <div class="details">
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/679/679781.png" alt="Humidity">
+                    <div>
+                        <p class="humidity">64%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1197/1197102.png" alt="Wind">
+                    <div>
+                        <p class="wind">18 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="forecast">
+                <!-- Forecast will be added dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API key for OpenWeatherMap (replace with your own key)
+        const apiKey = "your_api_key_here";
+        
+        // DOM Elements
+        const searchBox = document.querySelector(".search-box input");
+        const searchBtn = document.querySelector(".search-box button");
+        const weatherIcon = document.querySelector(".weather-icon");
+        const errorMsg = document.querySelector(".error");
+        const weatherDiv = document.querySelector(".weather");
+        const tempElement = document.querySelector(".temperature");
+        const cityElement = document.querySelector(".city");
+        const humidityElement = document.querySelector(".humidity");
+        const windElement = document.querySelector(".wind");
+        const forecastContainer = document.querySelector(".forecast");
+        const body = document.querySelector("body");
+
+        // Weather icon mapping
+        const iconMap = {
+            "01d": "https://cdn-icons-png.flaticon.com/512/6974/6974833.png",
+            "01n": "https://cdn-icons-png.flaticon.com/512/6974/6974833.png",
+            "02d": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+            "02n": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+            "03d": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+            "03n": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+            "04d": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+            "04n": "https://cdn-icons-png.flaticon.com/512/414/414927.png",
+            "09d": "https://cdn-icons-png.flaticon.com/512/3351/3351979.png",
+            "09n": "https://cdn-icons-png.flaticon.com/512/3351/3351979.png",
+            "10d": "https://cdn-icons-png.flaticon.com/512/3351/3351979.png",
+            "10n": "https://cdn-icons-png.flaticon.com/512/3351/3351979.png",
+            "11d": "https://cdn-icons-png.flaticon.com/512/5759/5759578.png",
+            "11n": "https://cdn-icons-png.flaticon.com/512/5759/5759578.png",
+            "13d": "https://cdn-icons-png.flaticon.com/512/6428/6428315.png",
+            "13n": "https://cdn-icons-png.flaticon.com/512/6428/6428315.png",
+            "50d": "https://cdn-icons-png.flaticon.com/512/1197/1197102.png",
+            "50n": "https://cdn-icons-png.flaticon.com/512/1197/1197102.png"
+        };
+
+        // Background gradients based on weather
+        const weatherBackgrounds = {
+            "Clear": "linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)",
+            "Clouds": "linear-gradient(135deg, #616161, #9bc5c3)",
+            "Rain": "linear-gradient(135deg, #000046, #1CB5E0)",
+            "Drizzle": "linear-gradient(135deg, #000046, #1CB5E0)",
+            "Thunderstorm": "linear-gradient(135deg, #141E30, #243B55)",
+            "Snow": "linear-gradient(135deg, #8e9eab, #eef2f3)",
+            "Mist": "linear-gradient(135deg, #606c88, #3f4c6b)",
+            "Smoke": "linear-gradient(135deg, #606c88, #3f4c6b)",
+            "Haze": "linear-gradient(135deg, #606c88, #3f4c6b)",
+            "Fog": "linear-gradient(135deg, #606c88, #3f4c6b)",
+            "default": "linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)"
+        };
+
+        // Check weather function
+        async function checkWeather(city) {
+            if (city === "") return;
+
+            // For demo purposes - in a real app, you would use the API
+            // Since we don't have a real API key, we'll use demo data
+            simulateWeatherData(city);
+        }
+
+        // Simulate weather data (replace with actual API call)
+        function simulateWeatherData(city) {
+            // Hide error, show weather
+            errorMsg.style.display = "none";
+            weatherDiv.style.display = "block";
+            
+            // Generate random but realistic weather data
+            const weatherConditions = ["Clear", "Clouds", "Rain", "Drizzle", "Thunderstorm"];
+            const condition = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+            const temp = Math.floor(Math.random() * 35) + 5; // 5°C to 40°C
+            const humidity = Math.floor(Math.random() * 50) + 30; // 30% to 80%
+            const wind = Math.floor(Math.random() * 20) + 5; // 5 km/h to 25 km/h
+            
+            // Update UI
+            weatherIcon.src = Object.values(iconMap)[Math.floor(Math.random() * Object.values(iconMap).length)];
+            tempElement.innerHTML = `${temp}°C`;
+            cityElement.innerHTML = city;
+            humidityElement.innerHTML = `${humidity}%`;
+            windElement.innerHTML = `${wind} km/h`;
+            
+            // Change background based on weather
+            body.style.background = weatherBackgrounds[condition] || weatherBackgrounds["default"];
+            
+            // Generate forecast
+            generateForecast();
+        }
+
+        // Generate 5-day forecast
+        function generateForecast() {
+            forecastContainer.innerHTML = "";
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            
+            for (let i = 1; i <= 5; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() + i);
+                const day = days[date.getDay()];
+                const temp = Math.floor(Math.random() * 15) + 15; // 15°C to 30°C
+                
+                const forecastItem = document.createElement("div");
+                forecastItem.className = "forecast-item";
+                forecastItem.innerHTML = `
+                    <p class="forecast-day">${day}</p>
+                    <img src="${Object.values(iconMap)[Math.floor(Math.random() * Object.values(iconMap).length)]}" alt="Forecast" width="40">
+                    <p class="forecast-temp">${temp}°C</p>
+                `;
+                
+                forecastContainer.appendChild(forecastItem);
+            }
+        }
+
+        // Event listeners
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        });
+
+        searchBox.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") {
+                checkWeather(searchBox.value);
+            }
+        });
+
+        // Initialize with a default city
+        window.addEventListener("load", () => {
+            checkWeather("London");
+        });
+    </script>
+</body>
+</html>
